@@ -2,7 +2,9 @@ use macroquad::prelude::*;
 use async_trait::async_trait;
 
 use crate::consts::*;
-use crate::{Board, Slot};
+use crate::board::{Board, Slot};
+
+
 
 #[async_trait]
 pub trait Graphics {
