@@ -6,7 +6,7 @@ const COLUMNS: usize = consts::COLUMNS as usize;
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Outcome {
     None,
-    Win(f32, f32, f32, f32),
+    Win(usize, usize, usize, usize),
     Draw,
 }
 
@@ -14,6 +14,7 @@ impl Outcome {
     pub fn is_none(self) -> bool {
         self == Outcome::None
     }
+    // pub fn get_utility(player: Slot)
 }
 
 #[derive(Debug)]
@@ -82,12 +83,7 @@ impl BoardTrait for Board {
                             && slotij == self[i + 2][j + 2]
                             && slotij == self[i + 3][j + 3]
                         {
-                            return Outcome::Win(
-                                j as f32,
-                                i as f32,
-                                j as f32 + 3.0,
-                                i as f32 + 3.0,
-                            );
+                            return Outcome::Win(j, i, j + 3, i + 3);
                         }
                     }
                     if j >= 3 {
@@ -96,12 +92,7 @@ impl BoardTrait for Board {
                             && slotij == self[i + 2][j - 2]
                             && slotij == self[i + 3][j - 3]
                         {
-                            return Outcome::Win(
-                                j as f32,
-                                i as f32,
-                                j as f32 - 3.0,
-                                i as f32 + 3.0,
-                            );
+                            return Outcome::Win(j, i, j - 3, i + 3);
                         }
                     }
                     // Check Vertical
@@ -109,7 +100,12 @@ impl BoardTrait for Board {
                         && slotij == self[i + 2][j]
                         && slotij == self[i + 3][j]
                     {
-                        return Outcome::Win(j as f32, i as f32, j as f32, i as f32 + 3.0);
+                        return Outcome::Win(
+                            j,
+                            i,
+                            j,
+                            i + 3
+                        );
                     }
                 }
                 if j < COLUMNS - 3 {
@@ -118,7 +114,12 @@ impl BoardTrait for Board {
                         && slotij == self[i][j + 2]
                         && slotij == self[i][j + 3]
                     {
-                        return Outcome::Win(j as f32, i as f32, j as f32 + 3.0, i as f32);
+                        return Outcome::Win(
+                            j,
+                            i,
+                            j + 3,
+                            i,
+                        );
                     }
                 }
             }

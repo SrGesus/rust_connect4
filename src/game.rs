@@ -2,10 +2,10 @@ use crate::consts;
 use macroquad::prelude::*;
 use std::time::Instant;
 
-use crate::graphics::Graphics;
+use crate::graphics::*;
 use crate::board::*;
 
-const ROWS: usize = consts::ROWS as usize;
+// const ROWS: usize = consts::ROWS as usize;
 const COLUMNS: usize = consts::COLUMNS as usize;
 
 pub struct Game {
@@ -67,35 +67,10 @@ impl Game {
             BLACK,
         );
 
-        self.draw_score_line();
+        self.outcome.draw_score_line().await;
         if is_mouse_button_pressed(MouseButton::Left) {
             self.board.clear();
             self.state = GameState::Playing;
-        }
-    }
-
-    pub fn draw_score_line(&self) {
-        let side = screen_width().min(screen_height());
-        let width_offset = (screen_width() - side) / 2.0;
-        let height_offset = (screen_height() - side) / 2.0;
-        let width_offset = width_offset - side / COLUMNS as f32 / 2.0;
-        let height_offset = height_offset - side / ROWS as f32 / 2.0;
-        println!("{:?}", self.outcome);
-
-        match self.outcome {
-            Outcome::None => panic!(),
-            Outcome::Win(x1, y1, x2, y2) => {
-                println!("{:?}", side * x1 + 1.0 / COLUMNS as f32 + width_offset);
-                draw_line(
-                    side * (x1 + 1.0) / COLUMNS as f32 + width_offset,
-                    side * (y1 + 1.0) / ROWS as f32 + height_offset,
-                    side * (x2 + 1.0) / COLUMNS as f32 + width_offset,
-                    side * (y2 + 1.0) / ROWS as f32 + height_offset,
-                    10.0,
-                    BLACK,
-                )
-            }
-            Outcome::Draw => (),
         }
     }
 
@@ -110,6 +85,8 @@ impl Game {
                 width_offset,
                 screen_width() - width_offset
             );
+
+            // If the mouse is within the table, insert a disk on the column the mouse is in
             if width_offset < mouse_x && mouse_x < screen_width() - width_offset {
                 let column = ((mouse_x - width_offset) / side * COLUMNS as f32) as usize;
                 println!("Columns number: {}", column);
